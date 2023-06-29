@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('/botman', function () {
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::middleware(['x.frame.options'])->any('/botman', function () {
     app('botman')->listen();
 });
