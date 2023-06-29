@@ -17,6 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['x.frame.options'])->any('/botman', function () {
+Route::any('/botman', function () {
     app('botman')->listen();
 });
