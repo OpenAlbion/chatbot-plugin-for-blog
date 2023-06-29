@@ -15,7 +15,10 @@ class XFrameOptions
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request)
-            ->header('X-Frame-Options', '*');
+        $response = $next($request);
+
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN', false);
+
+        return $response;
     }
 }
