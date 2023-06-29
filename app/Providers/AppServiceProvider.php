@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Http::macro('openalbion', function () {
+            return Http::withHeaders([
+                'X-WEAPONRY-KEY' => config('openalbion.api_key'),
+            ])->baseUrl('https://api.openalbion.com/api/weaponryV2');
+        });
+
+        Http::macro('aod', function () {
+            return Http::baseUrl('https://east.albion-online-data.com/api/v2/stats/prices');
+        });
     }
 }
