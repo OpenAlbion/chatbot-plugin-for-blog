@@ -25,9 +25,5 @@ class AppServiceProvider extends ServiceProvider
                 'X-WEAPONRY-KEY' => config('openalbion.api_key'),
             ])->baseUrl('https://api.openalbion.com/api/weaponryV2');
         });
-
-        Http::macro('aod', function () {
-            return Http::baseUrl('https://east.albion-online-data.com/api/v2/stats/prices');
-        });
     }
 }
