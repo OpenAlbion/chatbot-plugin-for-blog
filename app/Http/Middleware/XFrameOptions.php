@@ -17,7 +17,7 @@ class XFrameOptions
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'SAMEORIGIN', false);
+        $response->headers->set('X-Frame-Options', '*');
 
         return $response;
     }
