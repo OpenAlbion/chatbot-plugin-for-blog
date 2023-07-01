@@ -2,21 +2,18 @@
 
 namespace App\Http\Conversations;
 
-use App\Services\RenderService;
+use App\Services\ItemService;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\Question;
-use Illuminate\Support\Facades\Http;
 
 class MarketPriceConversation extends Conversation
 {
 	public function run()
 	{
 		$this->ask('ဘယ်ပစ္စည်း ရှာမှာလဲ?', function ($answer) {
-			$items = Http::openalbion()->get('/search', [
-				'search' => $answer->getText(),
-				'limit' => 12
-			])->json('data');
+			$items = (new ItemService)->search($answer->getText());
+
 			$buttons = [];
 
 			foreach (collect($items)->take(10) as $index => $item) {
@@ -28,7 +25,7 @@ class MarketPriceConversation extends Conversation
 				$question = Question::create($answer->getText() . ' အတွက် တစ်ခုရွေးချယ်ပါ')
 					->addButtons($buttons);
 				$this->bot->ask($question, function ($answer) use ($items) {
-					$result = RenderService::renderItemPrice($items[$answer->getValue()]['identifier']);
+					$result = (new ItemService)->detail('east', $items[$answer->getValue()]['id']);
 					if ($result != '') {
 						$this->bot->reply($items[$answer->getValue()]['name']);
 						$this->bot->typesAndWaits(1);
@@ -52,7 +49,7 @@ class MarketPriceConversation extends Conversation
 					});
 				});
 			} elseif (count($buttons) == 1) {
-				$result = RenderService::renderItemPrice($items[0]['identifier']);
+				$result = (new ItemService)->detail('east', $items[$answer->getValue()]['id']);
 				if ($result != '') {
 					$this->bot->reply($items[0]['name']);
 					$this->bot->typesAndWaits(1);

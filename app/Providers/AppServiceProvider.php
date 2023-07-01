@@ -20,10 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Http::macro('openalbion', function () {
-            return Http::withHeaders([
-                'X-WEAPONRY-KEY' => config('openalbion.api_key'),
-            ])->baseUrl('https://api.openalbion.com/api/weaponryV2');
+        Http::macro('aod', function (string $region, string $itemId) {
+            return Http::timeout(3)
+                ->get("http://{$region}.albion-online-data.com/api/v2/stats/prices/{$itemId}.json", [
+                    'locations' => 'Caerleon,Bridgewatch,Lymhurst,Thetford,Martlock,Fort Sterling',
+                    'qualities' => 1,
+                ]);
         });
     }
 }
